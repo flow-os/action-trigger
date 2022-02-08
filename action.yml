@@ -1,0 +1,26 @@
+name: "Trigger"
+description: "Trigger another workflow from the current workflow"
+branding:
+    icon: "arrow-left-circle"
+    color: "red"
+inputs:
+    token:
+        description: "The Github access token to use (i.e. secrets.GITHUB_TOKEN)"
+        required: true
+    repo:
+        description: "The name of the repository to dispatch the event to"
+        required: true
+    owner:
+        description: "The owner of the repository to dispatch the event to"
+        required: true
+    event_type:
+        description: "The type of event to be dispatched"
+        required: true
+    message:
+        description: "An optional JSON string payload to be dispatched"
+    debug:
+        description: "Set to true to enable logs"
+        default: "false"
+runs:
+    using: "node16"
+    main: "dist/index.js"
