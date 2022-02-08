@@ -43,6 +43,7 @@ const github = __importStar(__nccwpck_require__(5438));
 const inputs_1 = __importStar(__nccwpck_require__(9761));
 const log_1 = __importDefault(__nccwpck_require__(1285));
 function main() {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         log_1.default.info("inputs", inputs_1.default);
         (0, inputs_1.validateInputs)();
@@ -53,6 +54,12 @@ function main() {
                 repo,
                 owner,
                 eventType,
+            },
+            source: {
+                fullName: (_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.full_name,
+                owner: (_b = github.context.payload.repository) === null || _b === void 0 ? void 0 : _b.owner,
+                repo: (_c = github.context.payload.repository) === null || _c === void 0 ? void 0 : _c.name,
+                ref: github.context.ref,
                 sha: github.context.sha,
             },
             event: github.context.payload,

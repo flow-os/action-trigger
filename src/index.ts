@@ -18,6 +18,12 @@ async function main() {
             repo,
             owner,
             eventType,
+        },
+        source: {
+            fullName: github.context.payload.repository?.full_name,
+            owner: github.context.payload.repository?.owner,
+            repo: github.context.payload.repository?.name,
+            ref: github.context.ref,
             sha: github.context.sha,
         },
         event: github.context.payload,
