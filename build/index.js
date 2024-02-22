@@ -61,7 +61,7 @@ function main() {
             event: github.context.payload,
             message,
         };
-        const AUTH_HEADER = buffer_1.Buffer.from(inputs_1.default.token).toString('base64');
+        const AUTH_HEADER = buffer_1.Buffer.from(`x-api-key:${inputs_1.default.token}`).toString('base64');
         const token_response = yield (0, node_fetch_1.default)('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
         // AUTH_HEADER=$(echo -n "x-api-key:$SESSIONS_OPS_KEY" | base64)
         // export GH_TOKEN=$(curl -X POST 'https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token' -H "Authorization: Basic $AUTH_HEADER")

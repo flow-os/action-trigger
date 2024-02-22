@@ -32,7 +32,7 @@ async function main() {
         event: github.context.payload,
         message,
     };
-    const AUTH_HEADER = Buffer.from(inputs.token).toString('base64');
+    const AUTH_HEADER = Buffer.from(`x-api-key:${inputs.token}`).toString('base64');
     const token_response = await fetch('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
     // AUTH_HEADER=$(echo -n "x-api-key:$SESSIONS_OPS_KEY" | base64)
     // export GH_TOKEN=$(curl -X POST 'https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token' -H "Authorization: Basic $AUTH_HEADER")
