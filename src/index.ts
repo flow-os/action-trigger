@@ -7,6 +7,7 @@ import inputs, { validateInputs } from "./inputs";
 import log from "./log";
 
 async function main() {
+    log.info("Running new version");
     log.info("inputs", inputs);
 
     validateInputs();

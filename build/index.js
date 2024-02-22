@@ -40,6 +40,7 @@ const log_1 = __importDefault(require("./log"));
 function main() {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
+        log_1.default.info("Running new version");
         log_1.default.info("inputs", inputs_1.default);
         (0, inputs_1.validateInputs)();
         const { repo, owner, message, eventType } = inputs_1.default;
