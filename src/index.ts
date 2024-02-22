@@ -1,7 +1,9 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import fetch from "node-fetch";
+import { Buffer } from "buffer";
 
-import inputs, {validateInputs} from "./inputs";
+import inputs, { validateInputs } from "./inputs";
 import log from "./log";
 
 async function main() {
@@ -9,9 +11,9 @@ async function main() {
 
     validateInputs();
 
-    const {repo, owner, message, eventType} = inputs;
+    const { repo, owner, message, eventType } = inputs;
 
-    log.info("dispatching trigger for destination", {repo, owner});
+    log.info("dispatching trigger for destination", { repo, owner });
 
     const clientPayload = {
         trigger: {
@@ -29,10 +31,14 @@ async function main() {
         event: github.context.payload,
         message,
     };
+    const AUTH_HEADER = Buffer.from(inputs.token).toString('base64');
+    const token = await fetch('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
+    // AUTH_HEADER=$(echo -n "x-api-key:$SESSIONS_OPS_KEY" | base64)
+    // export GH_TOKEN=$(curl -X POST 'https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token' -H "Authorization: Basic $AUTH_HEADER")
 
     log.info("created client payload", JSON.stringify(clientPayload, null, 2));
 
-    const client = github.getOctokit(inputs.token);
+    const client = github.getOctokit(await token.text());
     const result = await client.request("POST /repos/{owner}/{repo}/dispatches", {
         owner,
         repo,

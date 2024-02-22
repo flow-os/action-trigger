@@ -33,6 +33,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const buffer_1 = require("buffer");
 const inputs_1 = __importStar(require("./inputs"));
 const log_1 = __importDefault(require("./log"));
 function main() {
@@ -58,8 +60,12 @@ function main() {
             event: github.context.payload,
             message,
         };
+        const AUTH_HEADER = buffer_1.Buffer.from(inputs_1.default.token).toString('base64');
+        const token = yield (0, node_fetch_1.default)('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
+        // AUTH_HEADER=$(echo -n "x-api-key:$SESSIONS_OPS_KEY" | base64)
+        // export GH_TOKEN=$(curl -X POST 'https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token' -H "Authorization: Basic $AUTH_HEADER")
         log_1.default.info("created client payload", JSON.stringify(clientPayload, null, 2));
-        const client = github.getOctokit(inputs_1.default.token);
+        const client = github.getOctokit(yield token.text());
         const result = yield client.request("POST /repos/{owner}/{repo}/dispatches", {
             owner,
             repo,
