@@ -68,11 +68,13 @@ function main() {
             message,
         };
         const AUTH_HEADER = buffer_1.Buffer.from(inputs_1.default.token).toString('base64');
-        const token = yield (0, node_fetch_1.default)('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
+        const token_response = yield (0, node_fetch_1.default)('https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token', { method: 'POST', headers: { 'Authorization': `Basic ${AUTH_HEADER}` } });
         // AUTH_HEADER=$(echo -n "x-api-key:$SESSIONS_OPS_KEY" | base64)
         // export GH_TOKEN=$(curl -X POST 'https://europe-west3-fos-sessions-dev.cloudfunctions.net/github-token' -H "Authorization: Basic $AUTH_HEADER")
+        const token = yield token_response.text();
         log_1.default.info("created client payload", JSON.stringify(clientPayload, null, 2));
-        const client = github.getOctokit(yield token.text());
+        log_1.default.info("Auth Key:", AUTH_HEADER, "Created Token: ", token);
+        const client = github.getOctokit(token);
         const result = yield client.request("POST /repos/{owner}/{repo}/dispatches", {
             owner,
             repo,
